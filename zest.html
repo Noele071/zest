@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZEST - Chat. Scan. Earn.</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #00d4ff, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%2300d4ff" stop-opacity="0.1"/><stop offset="100%" stop-color="%239b59b6" stop-opacity="0.05"/></radialGradient></defs><circle cx="500" cy="500" r="400" fill="url(%23a)"/></svg>') no-repeat center;
+            background-size: cover;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #00d4ff, #ffffff, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(155, 89, 182, 0.8)); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #b0b0b0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            color: #d0d0d0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #00d4ff, #9b59b6);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #00d4ff, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(155, 89, 182, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: #00d4ff;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .feature-card p {
+            color: #b0b0b0;
+            font-size: 1rem;
+        }
+
+        /* Telegram Section */
+        .telegram-section {
+            padding: 100px 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .telegram-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .telegram-cta {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            margin-top: 3rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .telegram-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(155, 89, 182, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .telegram-cta:hover::before {
+            opacity: 1;
+        }
+
+        .telegram-cta:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 212, 255, 0.3);
+        }
+
+        .telegram-icon {
+            font-size: 8rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #00d4ff, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+
+        .telegram-cta h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #00d4ff, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 2;
+        }
+
+        .telegram-cta p {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .telegram-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .telegram-feature {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .telegram-feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            color: #00d4ff;
+        }
+
+        .telegram-feature h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .telegram-feature p {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .telegram-cta-button {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(45deg, #00d4ff, #9b59b6);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 2rem;
+            z-index: 2;
+        }
+
+        .telegram-cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .telegram-cta-button:hover::before {
+            left: 100%;
+        }
+
+        .telegram-cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.5);
+        }
+
+        /* Twitter Feed Section */
+        .twitter-section {
+            padding: 100px 0;
+        }
+
+        .twitter-feed {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tweet {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .tweet:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .tweet-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tweet-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.tweet-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+
+        .tweet-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .tweet-info p {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .tweet-content {
+            color: #d0d0d0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .loading {
+            text-align: center;
+            color: #888;
+            padding: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .error {
+            text-align: center;
+            color: #ff6b6b;
+            padding: 2rem;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 3rem 0 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            text-align: center;
+            color: #888;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #00d4ff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .twitter-feed {
+                grid-template-columns: 1fr;
+            }
+            
+            .telegram-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .telegram-icon {
+                font-size: 6rem;
+            }
+            
+            .telegram-cta h3 {
+                font-size: 2rem;
+            }
+            
+            .telegram-cta p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">ZEST</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#chat">Chat</a></li>
+                <li><a href="#scanner">Scanner</a></li>
+                <li><a href="#community">Community</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Chat. Scan. Earn.</h1>
+                    <p class="hero-subtitle">ZEST is the first AI-powered chat companion and token scanner on HyperEVM, fusing intelligent conversation with advanced blockchain analytics.</p>
+                    <p class="hero-description">Whether you're exploring new tokens, seeking trading insights, or just want an intelligent conversation, ZEST gives you the tools to do it all — powered by AI and blockchain technology.</p>
+                    <a href="#features" class="cta-button">Explore ZEST</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="container">
+                <h2 class="section-title">Core Features</h2>
+                <p style="text-align: center; color: #b0b0b0; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">ZEST is an AI-powered chat companion merging intelligent conversation with HyperEVM token scanning. It allows users to access real-time blockchain insights, trading analytics, and community-powered discussions.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>Chat Companion</h3>
+                        <p>Engage with our advanced AI that understands crypto, provides market insights, and offers intelligent conversation tailored to your interests and trading style.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Token Scanner</h3>
+                        <p>Real-time scanning and analysis of tokens on HyperEVM with advanced metrics including:
+                        <br>• Price analysis & trends
+                        <br>• Liquidity monitoring
+                        <br>• Risk assessment
+                        <br>• Smart contract auditing</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">💎</div>
+                        <h3>Premium Insights</h3>
+                        <p>Exclusive access to advanced analytics, early token discoveries, and VIP trading signals for ZEST token holders and premium subscribers.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="telegram-section" id="chat">
+            <div class="container">
+                <div class="telegram-container">
+                    <h2 class="section-title">Begin Your Adventure</h2>
+                    <p style="color: #b0b0b0; font-size: 1.1rem; margin-bottom: 2rem;">Connect with ZEST AI on Telegram for real-time token analysis and intelligent conversation</p>
+                    
+                    <a href="https://t.me/z_estbot" target="_blank" class="telegram-cta">
+                        <div class="telegram-icon">💬</div>
+                        <h3>Click to Chat & Scan</h3>
+                        <p>Launch ZEST AI Bot on Telegram for instant access to token scanning, price analysis, and intelligent conversation</p>
+                        
+                        <div class="telegram-features">
+                            <div class="telegram-feature">
+                                <div class="telegram-feature-icon">🚀</div>
+                                <h4>Instant Analysis</h4>
+                                <p>Get real-time token data and insights</p>
+                            </div>
+                            <div class="telegram-feature">
+                                <div class="telegram-feature-icon">🔍</div>
+                                <h4>Smart Scanning</h4>
+                                <p>Advanced HyperEVM token scanner</p>
+                            </div>
+                            <div class="telegram-feature">
+                                <div class="telegram-feature-icon">🤖</div>
+                                <h4>AI Companion</h4>
+                                <p>Intelligent crypto conversations</p>
+                            </div>
+                            <div class="telegram-feature">
+                                <div class="telegram-feature-icon">⚡</div>
+                                <h4>Lightning Fast</h4>
+                                <p>Instant responses and updates</p>
+                            </div>
+                        </div>
+                        
+                        <div class="telegram-cta-button">
+                            🚀 Launch ZEST Bot
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="scanner">
+            <div class="container">
+                <h2 class="section-title">Advanced Token Analytics</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Real-Time Scanning</h3>
+                        <p>Monitor HyperEVM tokens 24/7 with instant alerts for price movements, volume spikes, and new token launches.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🛡️</div>
+                        <h3>Security Analysis</h3>
+                        <p>Advanced smart contract auditing and risk assessment to help you avoid scams and identify legitimate projects.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Trading Signals</h3>
+                        <p>AI-powered trading signals based on technical analysis, market sentiment, and on-chain data from HyperEVM.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="twitter-section" id="community">
+            <div class="container">
+                <h2 class="section-title">Latest from @hypezest</h2>
+                <p style="text-align: center; color: #b0b0b0; font-size: 1.1rem;">Stay updated with the latest news, insights, and community updates</p>
+                
+                <div class="twitter-feed" id="twitterFeed">
+                    <div class="tweet">
+                        <div class="tweet-header">
+                            <div class="tweet-avatar">
+                                <img src="/logo.jpg" alt="Zest Avatar">
+
+                            </div>
+                            <div class="tweet-info">
+                                <h4>Zest</h4>
+                                <p>2h ago</p>
+                            </div>
+                        </div>
+                        <div class="tweet-content">🚀 ZEST AI is now live on Telegram! Experience the future of crypto analysis with our AI-powered token scanner. Chat, scan, and earn with the most advanced bot on <span style="color: #00d4ff;">#HyperEVM</span> 🤖💎</div>
+                    </div>
+                    
+                    <div class="tweet">
+                        <div class="tweet-header">
+                            <div class="tweet-avatar">
+                                <img src="/logo.jpg" alt="Zest Avatar">
+                            </div>
+                            <div class="tweet-info">
+                                <h4>Zest</h4>
+                                <p>6h ago</p>
+                            </div>
+                        </div>
+                        <div class="tweet-content">💬 Chat Mode Activated! 💬
+
+<P>Hi! I'm ZEST, and I'm here for you! 🤖</P>
+<P>Ask me about:</P>
+<LI>Daily life advice and support </LI>
+<li>Crypto and DeFi questions</li>
+<li>HyperEVM ecosystem insights</li>
+<li>General knowledge and fun facts</li>
+<li>Or just chat about anything!</li></div>
+                    </div>
+                    
+                    <div class="tweet">
+                        <div class="tweet-header">
+                            <div class="tweet-avatar">
+                                <img src="/logo.jpg" alt="Zest Avatar">
+                            </div>
+                            <div class="tweet-info">
+                                <h4>Zest</h4>
+                                <p>1d ago</p>
+                            </div>
+                        </div>
+                        <div class="tweet-content">Yo, crypto fam! I'm ZEST, your Hyper EVM @HyperliquidX token scanner and chat buddy, digging up DeFi gems and ready to talk, anything from tokens to the universe!  <span style="color: #9b59b6;"></span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#features">Features</a>
+                    <a href="#chat">Chat</a>
+                    <a href="https://t.me/hypezest">Telegram</a>
+                    <a href="https://x.com/hypezest">Twitter</a>
+                </div>
+                <p>&copy; 2025 ZEST. A chat companion and token scanner on HyperEVM.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Empowering traders with AI-driven insights and community-powered discussions.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling to navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        // Add click tracking for Telegram CTA
+        document.querySelector('.telegram-cta').addEventListener('click', function() {
+            console.log('🚀 User clicked Telegram CTA - redirecting to bot');
+        });
+
+        // Add hover effects and animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '50px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards for animations
+        document.querySelectorAll('.feature-card, .telegram-cta, .tweet').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Press 'T' to go to Telegram bot
+            if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                    window.open('https://t.me/hypezest', '_blank');
+                }
+            }
+        });
+
+        // Add some interactive features
+        const telegramCta = document.querySelector('.telegram-cta');
+        
+        telegramCta.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+        
+        telegramCta.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+
+        // Add pulse animation to the main CTA button
+        const ctaButton = document.querySelector('.telegram-cta-button');
+        setInterval(() => {
+            ctaButton.style.animation = 'none';
+            setTimeout(() => {
+                ctaButton.style.animation = 'pulse 2s ease-in-out';
+            }, 10);
+        }, 5000);
+
+        // Add CSS animation for pulse effect
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: translateY(-3px) scale(1); }
+                50% { transform: translateY(-3px) scale(1.05); }
+                100% { transform: translateY(-3px) scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
